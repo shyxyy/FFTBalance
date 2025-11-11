@@ -86,7 +86,7 @@ void FFTBalance::processAndWrite(const std::string & outfile)
     std::cout << "Spectral analysis complete. Calculating gains..." << std::endl;
     calculateGains();
 
-    std::vector<std::vector<double>> processedChannels(channelCount, std::vector<double>(frameCount));
+    std::vector<SampleVector> processedChannels(channelCount, SampleVector(frameCount));
     double maxValGlobal { 0.0 };
 
     m_channelData.resize(frameCount);
@@ -148,7 +148,7 @@ void FFTBalance::processAndWrite(const std::string & outfile)
     const double finalScale = maxValGlobal > 1.0 ? 1.0 / maxValGlobal : 1.0;
     std::cout << "Applying final output scaling factor: " << finalScale << std::endl;
 
-    std::vector<double> finalInterleavedData;
+    SampleVector finalInterleavedData;
     finalInterleavedData.resize(frameCount * channelCount);
     for (size_t frameIndex = 0; frameIndex < frameCount; frameIndex++) {
         for (size_t channelIndex = 0; channelIndex < channelCount; channelIndex++) {
@@ -168,7 +168,7 @@ void FFTBalance::processAndWrite(const std::string & outfile)
     }
 }
 
-std::vector<double> FFTBalance::readFileAndGetMonoData(const std::string & filepath, SF_INFO & sfinfo_out, std::vector<double> & full_buffer_out)
+FFTBalance::SampleVector FFTBalance::readFileAndGetMonoData(const std::string & filepath, SF_INFO & sfinfo_out, SampleVector & full_buffer_out)
 {
     if (const auto inFile = sf_open(filepath.c_str(), SFM_READ, &sfinfo_out); !inFile) {
         throw std::runtime_error("Error opening file " + filepath + ": " + sf_strerror(nullptr));
@@ -183,7 +183,7 @@ std::vector<double> FFTBalance::readFileAndGetMonoData(const std::string & filep
 
         const size_t frameCount = sfinfo_out.frames;
         const size_t channelCount = sfinfo_out.channels;
-        std::vector<double> monoData;
+        SampleVector monoData;
         monoData.resize(frameCount);
         for (size_t frameIndex = 0; frameIndex < frameCount; frameIndex++) {
             double sum = 0;
@@ -243,7 +243,7 @@ size_t FFTBalance::freqToBin(double frequency, double samplerate, size_t binCoun
     }
 }
 
-std::vector<double> FFTBalance::calculateBandAmp(const std::vector<double> & monoData, const SF_INFO & sfinfoIn, const std::vector<Band> & bands) const
+FFTBalance::SampleVector FFTBalance::calculateBandAmp(const SampleVector & monoData, const SF_INFO & sfinfoIn, const std::vector<Band> & bands) const
 {
     const auto N = monoData.size();
     if (N < 2) {
@@ -254,7 +254,7 @@ std::vector<double> FFTBalance::calculateBandAmp(const std::vector<double> & mon
     const auto forwardMono = fftw_plan_dft_r2c_1d(N, const_cast<double *>(monoData.data()), fftMono, FFTW_ESTIMATE);
     fftw_execute(forwardMono);
 
-    std::vector<double> bandAmp;
+    SampleVector bandAmp;
     const auto samplerate = sfinfoIn.samplerate;
     for (const auto & band : bands) {
         auto startBin = freqToBin(band.low, samplerate, N);

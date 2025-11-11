@@ -46,11 +46,12 @@ public:
 
 private:
     // Helper functions
-    std::vector<double> readFileAndGetMonoData(const std::string & filepath, SF_INFO & sfinfo, std::vector<double> & fullBuffer);
+    using SampleVector = std::vector<double>;
+    SampleVector readFileAndGetMonoData(const std::string & filepath, SF_INFO & sfinfo, SampleVector & fullBuffer);
     std::vector<Band> generateBands(double samplerate, size_t bandCount) const;
     double getBandCenterFrequency(double low, double high) const;
     size_t freqToBin(double frequency, double samplerate, size_t binCount) const;
-    std::vector<double> calculateBandAmp(const std::vector<double> & monoData, const SF_INFO & sfinfoIn, const std::vector<Band> & bands) const;
+    SampleVector calculateBandAmp(const SampleVector & monoData, const SF_INFO & sfinfoIn, const std::vector<Band> & bands) const;
     void calculateGains();
 
     // Member variables
@@ -61,21 +62,21 @@ private:
     SF_INFO m_inputSfinfo;
     SF_INFO m_refSfinfo;
 
-    std::vector<double> m_inputBuffer;
-    std::vector<double> m_refBuffer;
-    std::vector<double> m_inputMonoData;
-    std::vector<double> m_refMonoData;
+    SampleVector m_inputBuffer;
+    SampleVector m_refBuffer;
+    SampleVector m_inputMonoData;
+    SampleVector m_refMonoData;
 
     std::vector<Band> m_bands;
-    std::vector<double> m_inputBandAmp;
-    std::vector<double> m_refBandAmp;
-    std::vector<double> m_gains;
+    SampleVector m_inputBandAmp;
+    SampleVector m_refBandAmp;
+    SampleVector m_gains;
 
     fftw_plan m_forwardChannelPlan;
     fftw_plan m_backwardChannelPlan;
     fftw_complex * m_fftChannel;
     fftw_complex * m_ifftChannel;
-    std::vector<double> m_channelData;
+    SampleVector m_channelData;
 };
 
 #endif // FFTBALANCE_HPP
