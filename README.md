@@ -13,12 +13,11 @@ To build and run FFTBalance, you need the following libraries installed on your 
 
 ## Build Instructions
 
-1.  **Clone the repository (if you haven't already):**
+1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/FFTBalance.git
+    git clone <repository_url>
     cd FFTBalance
     ```
-    *(Note: Replace `https://github.com/your-username/FFTBalance.git` with the actual repository URL if different.)*
 
 2.  **Create a build directory and navigate into it:**
     ```bash
