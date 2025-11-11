@@ -56,10 +56,10 @@ FFTBalance::~FFTBalance()
 
 void FFTBalance::loadTracks(const std::string & infile, const std::string & reffile)
 {
-    std::cout << "Loading input track: " << infile << "...\n";
+    std::cout << "Loading input track: " << infile << "..." << std::endl;
     m_inputData = readFile(infile);
 
-    std::cout << "Loading reference track: " << reffile << "...\n";
+    std::cout << "Loading reference track: " << reffile << "..." << std::endl;
     m_referenceData = readFile(reffile);
 
     if (m_inputData.info.samplerate != m_referenceData.info.samplerate) {
@@ -208,7 +208,7 @@ std::vector<Band> FFTBalance::generateBands(double samplerate, size_t bandCount)
 
     std::vector<Band> bands;
     if (endFreq <= startFreq) {
-        std::cerr << "Warning: Samplerate is too low to define full spectral range.\n";
+        std::cerr << "Warning: Samplerate is too low to define full spectral range." << std::endl;
         if (nyquist > 20.0) {
             bands.push_back({ startFreq, nyquist, getBandCenterFrequency(startFreq, nyquist) });
         }
