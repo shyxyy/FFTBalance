@@ -47,7 +47,13 @@ public:
 private:
     // Helper functions
     using SampleVector = std::vector<double>;
-    SampleVector readFileAndGetMonoData(const std::string & filepath, SF_INFO & sfinfo, SampleVector & fullBuffer);
+    struct InputData
+    {
+        SampleVector monoData;
+        SampleVector fullBuffer;
+        SF_INFO info;
+    };
+    InputData readFile(const std::string & filepath) const;
     std::vector<Band> generateBands(double samplerate, size_t bandCount) const;
     double getBandCenterFrequency(double low, double high) const;
     size_t freqToBin(double frequency, double samplerate, size_t binCount) const;
@@ -59,13 +65,8 @@ private:
     double m_maxBoostDb;
     double m_maxCutDb;
 
-    SF_INFO m_inputSfinfo;
-    SF_INFO m_refSfinfo;
-
-    SampleVector m_inputBuffer;
-    SampleVector m_refBuffer;
-    SampleVector m_inputMonoData;
-    SampleVector m_refMonoData;
+    InputData m_inputData;
+    InputData m_referenceData;
 
     std::vector<Band> m_bands;
     SampleVector m_inputBandAmp;

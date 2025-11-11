@@ -57,31 +57,31 @@ FFTBalance::~FFTBalance()
 void FFTBalance::loadTracks(const std::string & infile, const std::string & reffile)
 {
     std::cout << "Loading input track: " << infile << "...\n";
-    m_inputMonoData = readFileAndGetMonoData(infile, m_inputSfinfo, m_inputBuffer);
+    m_inputData = readFile(infile);
 
     std::cout << "Loading reference track: " << reffile << "...\n";
-    m_refMonoData = readFileAndGetMonoData(reffile, m_refSfinfo, m_refBuffer);
+    m_referenceData = readFile(reffile);
 
-    if (m_inputSfinfo.samplerate != m_refSfinfo.samplerate) {
+    if (m_inputData.info.samplerate != m_referenceData.info.samplerate) {
         throw std::runtime_error("Error: Input and Reference files must have the same sample rate!");
     }
 }
 
 void FFTBalance::processAndWrite(const std::string & outfile)
 {
-    m_bands = generateBands(m_inputSfinfo.samplerate, m_bandCount);
+    m_bands = generateBands(m_inputData.info.samplerate, m_bandCount);
     if (m_bands.empty()) {
         throw std::runtime_error("Error: Failed to generate valid frequency bands for the given sample rate.");
     }
 
-    const size_t channelCount = m_inputSfinfo.channels;
-    const size_t frameCount = m_inputSfinfo.frames;
-    std::cout << "Spectral analysis parameters: Sample Rate=" << m_inputSfinfo.samplerate
+    const size_t channelCount = m_inputData.info.channels;
+    const size_t frameCount = m_inputData.info.frames;
+    std::cout << "Spectral analysis parameters: Sample Rate=" << m_inputData.info.samplerate
               << " Hz, Channels=" << channelCount << ", Frames=" << frameCount
               << ", Bands=" << m_bands.size() << std::endl;
 
-    m_inputBandAmp = calculateBandAmp(m_inputMonoData, m_inputSfinfo, m_bands);
-    m_refBandAmp = calculateBandAmp(m_refMonoData, m_refSfinfo, m_bands);
+    m_inputBandAmp = calculateBandAmp(m_inputData.monoData, m_inputData.info, m_bands);
+    m_refBandAmp = calculateBandAmp(m_referenceData.monoData, m_referenceData.info, m_bands);
 
     std::cout << "Spectral analysis complete. Calculating gains..." << std::endl;
     calculateGains();
@@ -99,7 +99,7 @@ void FFTBalance::processAndWrite(const std::string & outfile)
 
     for (size_t channelIndex = 0; channelIndex < channelCount; ++channelIndex) {
         for (size_t frameIndex = 0; frameIndex < frameCount; ++frameIndex) {
-            m_channelData[frameIndex] = m_inputBuffer[frameIndex * channelCount + channelIndex];
+            m_channelData[frameIndex] = m_inputData.fullBuffer[frameIndex * channelCount + channelIndex];
         }
 
         fftw_execute(m_forwardChannelPlan);
@@ -111,8 +111,8 @@ void FFTBalance::processAndWrite(const std::string & outfile)
 
         for (size_t b = 0; b < m_bands.size(); ++b) {
             const auto G = m_gains[b];
-            size_t start = freqToBin(m_bands[b].low, m_inputSfinfo.samplerate, frameCount);
-            size_t end = freqToBin(m_bands[b].high, m_inputSfinfo.samplerate, frameCount);
+            size_t start = freqToBin(m_bands[b].low, m_inputData.info.samplerate, frameCount);
+            size_t end = freqToBin(m_bands[b].high, m_inputData.info.samplerate, frameCount);
             end = std::min(end, frameCount / 2);
             if (start < end) {
                 if (start == 0 && m_bands[b].low > 0) {
@@ -156,7 +156,7 @@ void FFTBalance::processAndWrite(const std::string & outfile)
         }
     }
 
-    SF_INFO outInfo { m_inputSfinfo };
+    SF_INFO outInfo { m_inputData.info };
     outInfo.channels = channelCount;
 
     if (const auto outFile = sf_open(outfile.c_str(), SFM_WRITE, &outInfo); !outFile) {
@@ -168,31 +168,31 @@ void FFTBalance::processAndWrite(const std::string & outfile)
     }
 }
 
-FFTBalance::SampleVector FFTBalance::readFileAndGetMonoData(const std::string & filepath, SF_INFO & sfinfo_out, SampleVector & full_buffer_out)
+FFTBalance::InputData FFTBalance::readFile(const std::string & filepath) const
 {
-    if (const auto inFile = sf_open(filepath.c_str(), SFM_READ, &sfinfo_out); !inFile) {
+    InputData inputData;
+    if (const auto inFile = sf_open(filepath.c_str(), SFM_READ, &inputData.info); !inFile) {
         throw std::runtime_error("Error opening file " + filepath + ": " + sf_strerror(nullptr));
     } else {
-        if (sfinfo_out.frames <= 0 || sfinfo_out.channels <= 0 || sfinfo_out.samplerate <= 0) {
+        if (inputData.info.frames <= 0 || inputData.info.channels <= 0 || inputData.info.samplerate <= 0) {
             sf_close(inFile);
             throw std::runtime_error("Error: Invalid file info for " + filepath);
         }
-        full_buffer_out.resize(sfinfo_out.frames * sfinfo_out.channels);
-        sf_readf_double(inFile, full_buffer_out.data(), sfinfo_out.frames);
+        inputData.fullBuffer.resize(inputData.info.frames * inputData.info.channels);
+        sf_readf_double(inFile, inputData.fullBuffer.data(), inputData.info.frames);
         sf_close(inFile);
 
-        const size_t frameCount = sfinfo_out.frames;
-        const size_t channelCount = sfinfo_out.channels;
-        SampleVector monoData;
-        monoData.resize(frameCount);
+        const size_t frameCount = inputData.info.frames;
+        const size_t channelCount = inputData.info.channels;
+        inputData.monoData.resize(frameCount);
         for (size_t frameIndex = 0; frameIndex < frameCount; frameIndex++) {
             double sum = 0;
             for (size_t channelIndex = 0; channelIndex < channelCount; channelIndex++) {
-                sum += full_buffer_out[frameIndex * channelCount + channelIndex];
+                sum += inputData.fullBuffer.at(frameIndex * channelCount + channelIndex);
             }
-            monoData.at(frameIndex) = sum / static_cast<double>(channelCount);
+            inputData.monoData.at(frameIndex) = sum / static_cast<double>(channelCount);
         }
-        return monoData;
+        return inputData;
     }
 }
 
