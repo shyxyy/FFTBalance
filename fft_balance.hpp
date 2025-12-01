@@ -57,7 +57,7 @@ private:
     std::vector<Band> generateBands(double samplerate, size_t bandCount) const;
     double getBandCenterFrequency(double low, double high) const;
     size_t freqToBin(double frequency, double samplerate, size_t binCount) const;
-    SampleVector calculateBandAmp(const SampleVector & monoData, const SF_INFO & sfinfoIn, const std::vector<Band> & bands) const;
+    SampleVector calculateBandAmp(const SampleVector & monoData, const SF_INFO & sfinfoIn, const std::vector<Band> & bands, size_t firstNonZeroFrame, size_t lastNonZeroFrame) const;
     void calculateGains();
 
     // Member variables
@@ -72,12 +72,6 @@ private:
     SampleVector m_inputBandAmp;
     SampleVector m_refBandAmp;
     SampleVector m_gains;
-
-    fftw_plan m_forwardChannelPlan;
-    fftw_plan m_backwardChannelPlan;
-    fftw_complex * m_fftChannel;
-    fftw_complex * m_ifftChannel;
-    SampleVector m_channelData;
 };
 
 #endif // FFTBALANCE_HPP
