@@ -32,3 +32,8 @@ target_link_libraries(${BINARY_NAME}
 )
 target_compile_options(${BINARY_NAME} PRIVATE -Wall -Wextra -O2)
 
+install(TARGETS ${BINARY_NAME}
+    DESTINATION bin
+)
+
+
